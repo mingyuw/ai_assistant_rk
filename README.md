@@ -1,4 +1,4 @@
-## SOftware download
+## Software download
 1. Flash the os [Tinker Edge R Debian Stretch V1.0.4 2020/07/07] to tinker edge r. [Tinker Edge R Debian Stretch V1.0.4] older than 2020/07/07 may not be possible transition to ums mode. I recommend download [Tinker Edge R Debian Stretch V1.0.4] again.
 
 2. Start LXterminal on tinker edge r and connect  USB Type-C
