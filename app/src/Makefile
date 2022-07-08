@@ -1,7 +1,7 @@
 
 PROJ_PATH:=$(shell pwd)
 APP_PATH:=$(PROJ_PATH)
-APP:= similarity_test
+APP:= simi
 
 TARGET_DEVICE = $(shell gcc -dumpmachine | cut -f1 -d -)
 
@@ -30,7 +30,7 @@ GST_PKGS:= gstreamer-1.0
 CFLAGS+= `pkg-config --cflags $(GST_PKGS)`
 LIBS+= `pkg-config --libs $(GST_PKGS)`
 
-# CV_PKGS:= opencv4
+# CV_PKGS:= OpenCV
 # CFLAGS+= `pkg-config --cflags $(CV_PKGS)`
 # LIBS+= `pkg-config --libs $(CV_PKGS)`
 
@@ -44,10 +44,6 @@ all: $(APP)
 
 $(APP): $(C_OBJS) $(CPP_OBJS)
 	$(CXX) -o $(APP) $(C_OBJS) $(CPP_OBJS) $(LIBS)
-	
-
-install: $(APP)
-	cp -rv $(APP) $(APP_PATH)
 
 clean:
 	rm -rf $(C_OBJS) $(CPP_OBJS) $(APP)

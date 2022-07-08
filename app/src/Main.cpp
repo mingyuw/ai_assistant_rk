@@ -74,24 +74,28 @@ int PushTrashCanDataToScreen(stSOM &m_som, cv::Mat eMat, int subType)
 
 int main(int argc, char **argv)
 {
-	string rtsp_src_addr = "rtsp://admin:htzm123456@112.44.218.103:354/0/0/0";//绵阳
-	//string rtsp_src_addr = "rtsp://admin:htzm123456@171.221.205.72:14154";//华体
+	//string rtsp_src_addr = "rtsp://admin:htzm123456@112.44.218.103:354/0/0/0";//绵阳
+	string rtsp_src_addr = "rtsp://admin:htzm123456@171.221.205.72:14154";//华体
 	//string rtsp_src_addr = "rtsp://192.168.5.17";//xilinx实验室
 	//string rtsp_src_addr = " rtsp://admin:htzm123456@183.252.19.171:12004";//福州
-	string file_src_addr = "33333.mp4";
+	string file_src_addr = "/home/linaro/Downloads/local2-1.mp4";
 	string uvc_src_addr = "/dev/video0";
     char file_str[512] = {0};
 	char rtsp_str[512] = {0};
 	char uvc_str[512] = {0};
     //sprintf(m_file, "filesrc location=%s ! decodebin ! nvvidconv ! video/x-raw, width=1920, height=1080, format=BGRx ! videoconvert ! appsink", src_addr.c_str());
-	sprintf(file_str, "filesrc location=%s ! decodebin ! nvvidconv ! video/x-raw, width=1920, height=1080, format=BGRx ! videoconvert ! appsink", file_src_addr.c_str());
+	sprintf(file_str, "filesrc location=%s ! rtph265depay ! h265parse ! mppvideodec ! videoconvert ! appsink", file_src_addr.c_str());
 	//sprintf(rtsp_str, "rtspsrc location=%s latency=100 ! decodebin ! nvvidconv ! video/x-raw, width=1280, height=720, format=BGRx ! videoconvert ! appsink", rtsp_src_addr.c_str());
 	//sprintf(rtsp_str, "rtspsrc location=%s latency=100 tcp-timeout=500 ! decodebin ! nvvidconv ! video/x-raw, width=1920, height=1080, format=BGRx ! videoconvert ! appsink", rtsp_src_addr.c_str());
-	sprintf(rtsp_str, "rtspsrc location=%s latency=100 ! decodebin ! nvvidconv ! video/x-raw, width=1920, height=1080, format=BGRx ! videoconvert ! appsink", rtsp_src_addr.c_str());
+	sprintf(rtsp_str, "rtspsrc location=%s !  rtph265depay ! h265parse ! mppvideodec ! videoconvert ! video/x-raw,format=(string)BGR ! appsink sync= false", rtsp_src_addr.c_str());
 	sprintf(uvc_str, "v4l2src device=%s ! video/x-raw, width=1280, height=720, format=YUY2, framerate=25/1 ! videoconvert ! video/x-raw, width=1280, height=720, format=BGRx ! videoconvert ! appsink", uvc_src_addr.c_str());
 
 	cv::VideoCapture cap;
-	cap.open(rtsp_str, CAP_GSTREAMER);
+	char* source = file_str;
+	if (!cap.open(source), cv::CAP_GSTREAMER)
+	{
+		printf("Video stream \"%s\" open failed\n", source);
+	}
 	
 	stSOM m_som;
 	m_som.p_type = ePrimarySceneType::TRASH_CAN;
@@ -186,15 +190,15 @@ int main(int argc, char **argv)
 
 	cv::Mat frame;
 	int runFlag = 0;
-	printf("Video %s started\n", rtsp_src_addr.c_str());	
 	
 	while(1)
 	{
 		printf("Checking cap status");
+
 		if(cap.isOpened() != 1)
 		{
-			printf("cap open failed");
-			cap.open(rtsp_str, CAP_GSTREAMER);
+			printf("cap open failed, try opening again");
+			cap.open(source);
 			if(cap.isOpened() != 1)
 			{
 				sleep(10);
@@ -242,7 +246,7 @@ int main(int argc, char **argv)
 			cv::rectangle(frame, m_som.p_rect, cv::Scalar(0,0,255), 2, 8, 0);
 			cv::Mat frameTmp;
 			cv::resize(frame, frameTmp, cv::Size(1280, 720));
-			imshow("LIVE", frameTmp);
+			cv::imshow("LIVE", frameTmp);
 		}
 		
 
