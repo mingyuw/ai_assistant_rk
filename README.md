@@ -20,14 +20,11 @@ sudo apt-get -y install gdb
 ```
 ## Add the following to .bashrc
 ```
-LD_LIBRARY_PATH=.
+LD_LIBRARY_PATH=. ./app/src
 export LD_LIBRARY_PATH
 ```
 ## rstp test
 ```
-gst-launch-1.0 --gst-debug=rtspsrc:5 rtspsrc location=rtsp://admin:htzm123456@112.44.218.103:354/0/0/0 latency=0 ! rtph264depay ! h264parse ! mppvideodec ! videoconvert ! fpsdisplaysink
-
-gst-launch-1.0 rtspsrc location=rtsp://admin:htzm123456@112.44.218.103:354/0/0/0 latency=0 ! rtph264depay ! h264parse ! mppvideodec ! videoconvert ! fpsdisplaysink
-
-gst-launch-1.0 rtspsrc location=rtsp://admin:htzm123456@112.44.218.103:354/0/0/0 ! video/x-raw,format=NV12,width=640,height=480,framerate=30/1 ! videoconvert ! appsink
+gst-launch-1.0 rtspsrc location=rtsp://admin:htzm123456@112.44.218.103:354/0/0/0 latency=0 ! rtph265depay ! h265parse ! mppvideodec ! videoconvert ! autovideosink
+gst-launch-1.0 rtspsrc location=rtsp://admin:htzm123456@171.221.205.72:14154 latency=0 ! rtph265depay ! h265parse ! mppvideodec ! videoconvert ! autovideosink
 ```

@@ -1,4 +1,3 @@
-
 PROJ_PATH:=$(shell pwd)
 APP_PATH:=$(PROJ_PATH)
 APP:= simi
@@ -6,7 +5,7 @@ APP:= simi
 TARGET_DEVICE = $(shell gcc -dumpmachine | cut -f1 -d -)
 
 RNKPU_DIR?=/home/linaro/projects/RKNPUTools/rknn-api/Linux/rknn_api_sdk/
-LIB_INSTALL_DIR?=/usr/lib/aarch64-linux-gnu/
+LIB_INSTALL_DIR=/usr/lib/aarch64-linux-gnu/
 
 CFLAGS+=  -O2 -g 
 
@@ -30,9 +29,13 @@ GST_PKGS:= gstreamer-1.0
 CFLAGS+= `pkg-config --cflags $(GST_PKGS)`
 LIBS+= `pkg-config --libs $(GST_PKGS)`
 
-# CV_PKGS:= OpenCV
-# CFLAGS+= `pkg-config --cflags $(CV_PKGS)`
-# LIBS+= `pkg-config --libs $(CV_PKGS)`
+GST_VIDEO_PKGS:= gstreamer-video-1.0
+CFLAGS+= `pkg-config --cflags $(GST_VIDEO_PKGS)`
+LIBS+= `pkg-config --libs $(GST_VIDEO_PKGS)`
+
+GST_APP_PKGS:= gstreamer-app-1.0
+CFLAGS+= `pkg-config --cflags $(GST_APP_PKGS)`
+LIBS+= `pkg-config --libs $(GST_APP_PKGS)`
 
 all: $(APP)
 
